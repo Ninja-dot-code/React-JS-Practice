@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import "./App.css";
 
 function App() {
@@ -6,6 +6,7 @@ function App() {
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, seCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+  const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
     let pass = "";
@@ -24,6 +25,11 @@ function App() {
   useEffect(() => {
     passwordGenerator();
   }, [length, numberAllowed, charAllowed, passwordGenerator]);
+  const passwordCopied = useCallback(() => {
+    passwordRef.current?.select();
+    passwordRef.current?.setSelectionRange(0, 100);
+    window.navigator.clipboard.writeText(password);
+  }, [password]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
@@ -38,9 +44,15 @@ function App() {
             value={password}
             className="w-full rounded-l-lg bg-white p-3 text-black outline-none"
             readOnly
+            ref={passwordRef}
           />
 
-          <button className="rounded-r-lg bg-blue-600 px-4 hover:bg-blue-500">
+          <button
+            className="rounded-r-lg
+           bg-blue-600 px-4
+            hover:bg-blue-500"
+            onClick={passwordCopied}
+          >
             Copy
           </button>
         </div>
