@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [length, setLenght] = useState(8);
+  const [length, setLength] = useState(10);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, seCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
@@ -10,6 +10,7 @@ function App() {
   const passwordGenerator = useCallback(() => {
     let pass = "";
     let str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     if (numberAllowed) str += "1234567890";
     if (charAllowed) str += "@#$%^&*()!_{}:|<>?/";
 
@@ -17,39 +18,74 @@ function App() {
       let char = Math.floor(Math.random() * str.length + 1);
       pass += str.charAt(char);
     }
+
     setPassword(pass);
   }, [length, numberAllowed, charAllowed, setPassword]);
+  useEffect(() => {
+    passwordGenerator();
+  }, [length, numberAllowed, charAllowed, passwordGenerator]);
 
   return (
-    <div
-      className="min-h-screen flex items-start justify-center
-      bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950
-      px-4 py-16"
-    >
-      <div
-        className="max-w-md mx-auto w-full
-        bg-white/5 backdrop-blur-xl
-        border border-white/10
-        text-violet-100
-        shadow-2xl shadow-purple-950/50
-        rounded-2xl p-6 sm:p-8"
-      >
-        <div
-          className="flex overflow-hidden rounded-xl mb-4
-          border border-white/10 bg-slate-950/80
-          shadow-inner transition-all duration-300
-          focus-within:border-violet-500
-          focus-within:shadow-lg focus-within:shadow-violet-500/10"
-        >
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+      <div className="w-full max-w-md rounded-xl bg-gray-800 p-6 text-white shadow-lg">
+        <h1 className="mb-6 text-center text-2xl font-bold">
+          Password Generator
+        </h1>
+
+        <div className="mb-6 flex">
           <input
             type="text"
             value={password}
-            className="outline-none w-full min-w-0 py-3 px-4
-            bg-white text-black
-            font-mono tracking-wide placeholder-slate-500
-            focus:ring-2 focus:ring-violet-500/30"
+            className="w-full rounded-l-lg bg-white p-3 text-black outline-none"
             readOnly
           />
+
+          <button className="rounded-r-lg bg-blue-600 px-4 hover:bg-blue-500">
+            Copy
+          </button>
+        </div>
+
+        <div className="mb-5 flex items-center gap-3">
+          <input
+            type="range"
+            value={length}
+            defaultChecked={numberAllowed}
+            className="w-full accent-blue-500 cursor-pointer"
+            min={10}
+            max={100}
+            onChange={(e) => {
+              setLength(e.target.value);
+            }}
+          />
+          <span>{length}</span>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-5">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              defaultChecked={charAllowed}
+              id="numberInput"
+              onChange={() => {
+                setNumberAllowed((prev) => !prev);
+              }}
+              className="accent-blue-500"
+            />
+            Numbers
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="characterInput"
+              className="accent-blue-500"
+              defaultChecked={charAllowed}
+              onChange={() => {
+                seCharAllowed((prev) => !prev);
+              }}
+            />
+            Special Characters
+          </label>
         </div>
       </div>
     </div>
