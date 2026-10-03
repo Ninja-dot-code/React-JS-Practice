@@ -61,7 +61,6 @@ function App() {
           <input
             type="range"
             value={length}
-            defaultChecked={numberAllowed}
             className="w-full accent-blue-500 cursor-pointer"
             min={10}
             max={100}
@@ -76,7 +75,7 @@ function App() {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              defaultChecked={charAllowed}
+              defaultChecked={numberAllowed}
               id="numberInput"
               onChange={() => {
                 setNumberAllowed((prev) => !prev);
